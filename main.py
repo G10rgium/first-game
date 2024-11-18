@@ -1,30 +1,41 @@
-# dct1 = {
-#     "David": ["Programing", "Calculus", "Algorithms"],
-#     "John": ["Calculus", "OOP", "Data Bases"],
-#     "George": ["Web development", "Data Bases", "Calculus", "Algorithms"],
-#     "Steve": "Linux"
-# }
-
-
-
-
-# for key, value in dct1.items():
-#     # print(value)
-#     val = value.split()
-#     print(val)
-#     for subj in value:
-#         print(subj, key)
-
-
-
-
 import sys
+from idlelib.replace import replace
+from os import remove
 
 import pygame
 
 from random import randint
 
-from controller import Player, Bamboo, Player2
+# class Player:
+#     def __init__(self):
+#         self.size = 80
+#         self.x = 960
+#         self.y = 540
+#         self.speed = 5
+#
+#     def move_player(self, x_position, y_position):
+#         # dx = x_position - self.x
+#         # dy = y_position - self.y
+#         self.x += x_position * self.speed
+#         self.y += y_position * self.speed
+#
+#
+# class Bamboo:
+#     def __init__(self):
+#         self.size = 50
+#         self.x = randint(0, 1920)
+#         self.y = randint(0, 1080)
+#
+#
+# class Player2:
+#     def __init__(self):
+#         self.size = 80
+#         self.x = 560
+#         self.y = 240
+#         self.speed = 5
+#     def move_player(self, x_position, y_position):
+#         self.x += x_position * self.speed
+#         self.y += y_position * self.speed
 
 pygame.init()
 
@@ -34,7 +45,7 @@ player_image = pygame.image.load("panda-bear.png")
 
 hunter = pygame.image.load("lumberjack.png")
 
-hunter_1 = Player2()
+hunter_1 = pygame.Rect(randint(0, 1820), randint(0, 1000), 80, 80)
 
 WIDTH = 1920
 HEIGHT = 1080
@@ -47,22 +58,33 @@ BLUE = (0, 0, 255)
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
 
-player_1 = Player()
+player_1 = pygame.Rect(randint(0, 1820), randint(0, 1000), 80, 80)
+
+size = 80, 80
 
 pygame.display.set_caption("user: ")
 
-# font = pygame.font.SysFont('Arial', 30)
-# username = ""
-
-running = True
+font = pygame.font.SysFont('Arial', 30)
 
 bamboo = pygame.image.load("bamboo.png")
 
-pixel = 64
+vel_panda = 12
 
-bambo = Bamboo()
+vel_hunter = 10
 
+bambo = pygame.Rect(randint(0, 1820), randint(0, 1000), 80, 80)
+size_1 = pygame.transform.scale(player_image, size)
+size_2 = pygame.transform.scale(hunter, size)
+size_3 = pygame.transform.scale(bamboo, size)
 
+L_wall = pygame.Rect(0, 0, 1, HEIGHT)
+R_wall = pygame.Rect(WIDTH, 0, 1, HEIGHT)
+T_wall = pygame.Rect(0, 0, WIDTH, 1)
+B_wall = pygame.Rect(0, HEIGHT, WIDTH, 1)
+
+score = 0
+
+running = True
 while running:
     screen.blit(background_image, (0, 0))
     for event in pygame.event.get():
@@ -76,49 +98,63 @@ while running:
         # if event.type == pygame.KEYDOWN:
         #     username += event.unicode
     # pygame.draw.rect(screen, BLACk, (player_1.x, player_1.y, player_1.size, player_1.size))
-    screen.blit(pygame.transform.scale(player_image, (player_1.size, player_1.size)), (player_1.x, player_1.y))
-    screen.blit(pygame.transform.scale(bamboo, (bambo.size, bambo.size)), (bambo.x, bambo.y))
-    screen.blit(pygame.transform.scale(hunter, (hunter_1.size, hunter_1.size)), (hunter_1.x, hunter_1.y))
-    keyboard = pygame.key.get_pressed()
+    screen.blit(size_1, player_1)
+    screen.blit(size_3, bambo)
+    screen.blit(size_2, hunter_1)
+
     # print(keyboard)
-    if player_1.x == hunter_1.x and player_1.y == hunter_1.y:
-        running = False
-    dx = 0
-    dy = 0
-    wx = 0
-    wy = 0
-    def update():
-        if keyboard[pygame.K_LEFT] and player_1.x > 0:
-            player_1.x -= 1
-        elif keyboard[pygame.K_RIGHT] and player_1.x < WIDTH:
-            player_1.x += 1
-        elif keyboard[pygame.K_UP] and player_1.y > 0:
-            player_1.y -= 1
-        elif keyboard[pygame.K_DOWN] and player_1.y < HEIGHT:
-            player_1.y += 1
+    # dx = 0
+    # dy = 0
+    # wx = 0
+    # wy = 0
+    # def update():
+    #     if keyboard[pygame.K_LEFT] and player_1.x > 0:
+    #         player_1.x -= 1
+    #     elif keyboard[pygame.K_RIGHT] and player_1.x < WIDTH:
+    #         player_1.x += 1
+    #     elif keyboard[pygame.K_UP] and player_1.y > 0:
+    #         player_1.y -= 1
+    #     elif keyboard[pygame.K_DOWN] and player_1.y < HEIGHT:
+    #         player_1.y += 1
+    keyboard = pygame.key.get_pressed()
     if keyboard[pygame.K_LEFT]:
-        dx -= 1
+        player_1.x -= vel_panda
     if keyboard[pygame.K_RIGHT]:
-        dx += 1
+        player_1.x += vel_panda
     if keyboard[pygame.K_UP]:
-        dy -= 1
+        player_1.y -= vel_panda
     if keyboard[pygame.K_DOWN]:
-        dy += 1
+        player_1.y += vel_panda
     if keyboard[pygame.K_w]:
-        wy -= 1
+        hunter_1.y -= vel_hunter
     if keyboard[pygame.K_s]:
-        wy += 1
+        hunter_1.y += vel_hunter
     if keyboard[pygame.K_a]:
-        wx -= 1
+        hunter_1.x -= vel_hunter
     if keyboard[pygame.K_d]:
-        wx += 1
+        hunter_1.x += vel_hunter
 
-    # username_screen = font.render(username, True, RED)
-    # screen.blit(username_screen, (player_1.x, player_1.y + 50))
-    update()
+    username_screen = font.render("SCORE: " + str(score), False, RED)
+    screen.blit(username_screen, (960, 0))
+    # update()
 
-    player_1.move_player(dx, dy)
-    hunter_1.move_player(wx, wy)
+    if player_1.colliderect(hunter_1):
+        pygame.draw.rect(screen, (255, 0, 0), player_1, 4)
+
+    if player_1.colliderect(bambo):
+        bambo = pygame.Rect(randint(0, 1820), randint(0, 1000), 80, 80)
+        score += 1
+
+    if player_1.colliderect(L_wall):
+        player_1.x = 0
+    if player_1.colliderect(R_wall):
+        player_1.x = 0
+    if player_1.colliderect(T_wall):
+        player_1.y = 0
+    if player_1.colliderect(B_wall):
+        player_1.y = 0
+
+
     pygame.display.update()
     clock.tick(30)
 
