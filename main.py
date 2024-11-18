@@ -93,13 +93,21 @@ while running:
         score += 1
 
     if player_1.colliderect(L_wall):
-        player_1.x = 0
+        player_1.x += vel_panda
     if player_1.colliderect(R_wall):
-        player_1.x = 0
+        player_1.x -= vel_panda
     if player_1.colliderect(T_wall):
-        player_1.y = 0
+        player_1.y += vel_panda
     if player_1.colliderect(B_wall):
-        player_1.y = 0
+        player_1.y -= vel_panda
+    if hunter_1.colliderect(L_wall):
+        hunter_1.x += vel_hunter
+    if hunter_1.colliderect(R_wall):
+        hunter_1.x -= vel_hunter
+    if hunter_1.colliderect(T_wall):
+        hunter_1.y += vel_hunter
+    if hunter_1.colliderect(B_wall):
+        hunter_1.y -= vel_hunter
 
 
     pygame.display.update()
